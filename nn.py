@@ -15,7 +15,7 @@ class DenseLayer:
         
     def forward(self, inputs):
         if self.activation == 'sigmoid':
-            return activations.sigmoid(np.dot(inputs, self.weights) + self.bias)
+            return activations.sigmoid(inputs, self.weights, self.bias)
         else:
             raise ValueError(f'Unsupported activation: {self.activation}')
         
@@ -30,4 +30,14 @@ class NeuralNetwork:
     
     def train(self, X, y, learning_rate, epochs):
         if self.layers[0].activation == 'sigmoid':
-            pass
+            self.layers[0].weights, self.layers[0].bias = activations.train_logistic_regression(X, y, learning_rate, epochs)
+            
+
+if __name__ == "__main__":
+    # Example usage
+    X = np.random.randn(100, 2)
+    y = (np.random.rand(100, 1) > 0.5).astype(int)
+
+    nn = NeuralNetwork([DenseLayer(2, 1, activation='sigmoid')])
+    nn.train(X, y, learning_rate=0.01, epochs=100)
+    predictions = nn.forward(X)
