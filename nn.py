@@ -18,6 +18,8 @@ class DenseLayer:
             return activations.linear(inputs, self.weights, self.bias)
         elif self.activation == 'sigmoid':
             return activations.sigmoid(inputs, self.weights, self.bias)
+        elif self.activation == 'relu':
+            return activations.relu(inputs, self.weights, self.bias)
         else:
             raise ValueError(f'Unsupported activation: {self.activation}')
         
@@ -45,12 +47,30 @@ if __name__ == "__main__":
     X = np.random.randn(100, 2)
     y = (np.random.rand(100, 1) > 0.5).astype(int)
 
+    print("LOGISTIC REGRESSION")
     nn = NeuralNetwork([DenseLayer(2, 1, activation='sigmoid')])
     nn.train(X, y, learning_rate=0.01, epochs=100)
     predictions = nn.forward(X)
     
     y_linear = 2 * X[:, 0:1] + 3 * X[:, 1:2] + np.random.randn(100, 1) * 0.1
 
+    print("LINEAR REGRESSION")
     nn_linear = NeuralNetwork([DenseLayer(2, 1, activation='linear')])
     nn_linear.train(X, y_linear, learning_rate=0.01, epochs=100)
     predictions_linear = nn_linear.forward(X)
+    
+    # print("LINEAR & ReLU")
+    # nn_relu = NeuralNetwork([
+    #     DenseLayer(2, 10, activation='relu'),
+    #     DenseLayer(10, 1, activation='linear')
+    # ])
+    # nn_relu.train(X, y_linear, learning_rate=0.01, epochs=100)
+    # predictions = nn_relu.forward(X)
+    
+    # print("LOGISTIC & ReLU")
+    # nn_lo_relu = NeuralNetwork([
+    #     DenseLayer(2, 10, activation='relu'),
+    #     DenseLayer(10, 1, activation='logistic')
+    # ])
+    # nn_lo_relu.train(X, y_linear, learning_rate=0.01, epochs=100)
+    # predictions = nn_lo_relu.forward(X)

@@ -73,3 +73,10 @@ def train_logistic_regression(X, y, learning_rate, epochs):
     W = np.zeros((features_size, 1))
     b = 0
     return train_model(X, y, W, b, learning_rate, epochs, sigmoid(X, W, b))
+
+
+'''
+ReLU
+'''
+def relu(X, W, b):
+    return np.maximum(0, f_x(X, W, b))
