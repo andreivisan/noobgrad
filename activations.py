@@ -21,6 +21,9 @@ def compute_gradients(X, y, w, b, activation):
     return dW, db
 
 
+# Because we are using epochs, we are not using the cost function
+# TODO A future optimization would be to use the cost function to stop the training
+# We could keep the epoch count and stop when the cost function is not changing
 def train_model(X, y, learning_rate, epochs, activation) :
     samples_size, features_size = X.shape
     
@@ -66,6 +69,43 @@ def train_logistic_regression(X, y, learning_rate, epochs):
 
 '''
 ReLU
+As for ReLU we should use backpropagation and a suitable loss function
+we will use the MSE loss function and custom gradients and weights and bias update
 '''
 def relu(X, W, b):
     return np.maximum(0, f_x(X, W, b))
+
+def relu_derivative(x):
+    return (x > 0).astype(float)
+
+def mse_loss(y_true, y_pred):
+    n_samples = y_true.shape[0]
+    return 1 / (2 * n_samples) * np.sum((y_pred - y_true) ** 2)
+
+def train_relu(X, y, learning_rate, n_epochs):
+    n_samples, n_features = X.shape
+    
+    # Initialize weights and bias
+    W = np.random.randn(n_features, 1) * np.sqrt(2.0 / n_features)
+    b = 0
+
+    for epoch in range(n_epochs):
+        # Forward pass
+        z = relu(X, W, b)
+        y_pred = relu(X, W, b)
+        
+        # Compute the gradients
+        delta = relu_derivative(z) * (y_pred - y)
+        dW = 1 / n_samples * np.dot(X.T, delta)
+        db = 1 / n_samples * np.sum(delta)
+        
+        # Update weights and bias
+        W -= learning_rate * dW
+        b -= learning_rate * db
+        
+        # Compute and print the loss
+        # if epoch % 10 == 0:
+        #     loss = mse_loss(y, y_pred)
+        #     print(f'Epoch {epoch}/{n_epochs}, Loss: {loss}')
+    
+    return W, b
