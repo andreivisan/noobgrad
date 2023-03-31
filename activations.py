@@ -29,7 +29,9 @@ def train_model(X, y, learning_rate, epochs, activation) :
     
     # Initialize weights and bias
     W = np.zeros((features_size, 1))
-    b = 0
+    b = np.zeros((1, 1))
+
+    y = y.reshape(-1, 1)  # Reshape y to have dimensions (n_samples, 1)
     
     for epoch in range(epochs):
         # Compute the derivatives(gradients) for w and b
@@ -87,17 +89,18 @@ def train_relu(X, y, learning_rate, n_epochs):
     
     # Initialize weights and bias
     W = np.random.randn(n_features, 1) * np.sqrt(2.0 / n_features)
-    b = 0
+    b = np.zeros((1, 1))
+
+    y = y.reshape(-1, 1)  # Reshape y to have dimensions (n_samples, 1)
 
     for epoch in range(n_epochs):
         # Forward pass
-        z = relu(X, W, b)
-        y_pred = relu(X, W, b)
+        p = relu(X, W, b)
         
         # Compute the gradients
-        delta = relu_derivative(z) * (y_pred - y)
-        dW = 1 / n_samples * np.dot(X.T, delta)
-        db = 1 / n_samples * np.sum(delta)
+        # delta = relu_derivative(z) * (y_pred - y)
+        dW = (1 / n_samples) * np.dot(X.T, (p - y))
+        db = (1 / n_samples) * np.sum(p - y)
         
         # Update weights and bias
         W -= learning_rate * dW

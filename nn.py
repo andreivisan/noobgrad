@@ -19,11 +19,11 @@ class DenseLayer:
         # Using the weights and bias calculated using gradient descent calculate the output 
         # for one layer as input for the next layer
         if self.activation == 'linear':
-            return activations.linear(self.inputs, self.weights, self.bias)
+            return activations.linear(inputs, self.weights, self.bias)
         elif self.activation == 'sigmoid':
-            return activations.sigmoid(self.inputs, self.weights, self.bias)
+            return activations.sigmoid(inputs, self.weights, self.bias)
         elif self.activation == 'relu':
-            return activations.relu(self.inputs, self.weights, self.bias)
+            return activations.relu(inputs, self.weights, self.bias)
         else:
             raise ValueError(f'Unsupported activation: {self.activation}')
         
@@ -37,7 +37,7 @@ class NeuralNetwork:
         return inputs
     
     def train(self, X, y, learning_rate, epochs):
-        for layer in self.layers[::-1]:
+        for layer in self.layers:
             if layer.activation == 'linear':
                 layer.weights,layer.bias = activations.train_linear_regression(X, y, learning_rate, epochs)
             elif layer.activation == 'sigmoid':
