@@ -7,16 +7,21 @@ def f_x(X, W, b):
 
 def compute_gradients(X, y, w, b, activation):
     samples_size = X.shape[0]
+    y = y.reshape(-1,1)             # ensure 2D
+    w = w.reshape(-1,1)
     
     # Compute predicted values
     if activation == 'sigmoid':
         p = sigmoid(X, w, b)
-    else:
+    elif activation == 'linear':
         p = linear(X, w, b)
+    elif activation == 'relu':
+        p = relu(X, w, b)
     
     # Compute the derivatives(gradients) for w and b
-    dW = (1 / samples_size) * np.dot(X.T, (p - y))
-    db = (1 / samples_size) * np.sum(p - y)
+    err = p - y
+    dW = (1 / samples_size) * X.T @ err
+    db = (1 / samples_size) * np.sum(err)
     
     return dW, db
 
@@ -29,23 +34,22 @@ def train_model(X, y, learning_rate, epochs, activation) :
     
     # Initialize weights and bias
     W = np.zeros((features_size, 1))
-    b = np.zeros((1, 1))
-
-    y = y.reshape(-1, 1)  # Reshape y to have dimensions (n_samples, 1)
+    w_in_shape = W.shape
+    b = np.zeros((1, 10))
     
     for epoch in range(epochs):
         # Compute the derivatives(gradients) for w and b
-        dW, db = compute_gradients(X, y, W, b, activation)
+        dW, db = compute_gradients(X, y, W, b.T, activation)
         
         # Update the weights and bias
         W -= learning_rate * dW
         b -= learning_rate * db
         
         # Optional: Compute and print loss every 10 epochs
-        if epoch % 10 == 0:
+        if epoch % 100 == 0:
             print(f'Epoch {epoch}/{epochs}, dW, db: {dW}, {db}')
         
-    return W, b
+    return W.reshape(w_in_shape), b
 
 '''
 LINEAR REGRESSION
@@ -84,31 +88,5 @@ def mse_loss(y_true, y_pred):
     n_samples = y_true.shape[0]
     return 1 / (2 * n_samples) * np.sum((y_pred - y_true) ** 2)
 
-def train_relu(X, y, learning_rate, n_epochs):
-    n_samples, n_features = X.shape
-    
-    # Initialize weights and bias
-    W = np.random.randn(n_features, 1) * np.sqrt(2.0 / n_features)
-    b = np.zeros((1, 1))
-
-    y = y.reshape(-1, 1)  # Reshape y to have dimensions (n_samples, 1)
-
-    for epoch in range(n_epochs):
-        # Forward pass
-        p = relu(X, W, b)
-        
-        # Compute the gradients
-        # delta = relu_derivative(z) * (y_pred - y)
-        dW = (1 / n_samples) * np.dot(X.T, (p - y))
-        db = (1 / n_samples) * np.sum(p - y)
-        
-        # Update weights and bias
-        W -= learning_rate * dW
-        b -= learning_rate * db
-        
-        # Compute and print the loss
-        # if epoch % 10 == 0:
-        #     loss = mse_loss(y, y_pred)
-        #     print(f'Epoch {epoch}/{n_epochs}, Loss: {loss}')
-    
-    return W, b
+def train_relu(X, y, learning_rate, epochs):
+    return train_model(X, y, learning_rate, epochs, activation='relu')
