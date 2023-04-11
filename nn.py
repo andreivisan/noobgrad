@@ -10,7 +10,7 @@ class DenseLayer:
         Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification
         '''
         self.weights = np.random.randn(n_batches, n_features) * np.sqrt(2.0 / n_batches)
-        self.bias = np.zeros((1, n_features))
+        self.bias = np.zeros((1, n_batches))
         self.activation = activation
         self.inputs = None
         
