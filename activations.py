@@ -2,7 +2,7 @@ import numpy as np
 
 
 def f_x(X, W, b):
-    return np.dot(X, W) + b
+    return np.dot(X, W.T) + b
 
 
 def compute_gradients(X, y, w, b, activation):
@@ -39,7 +39,7 @@ def train_model(X, y, learning_rate, epochs, activation) :
     
     for epoch in range(epochs):
         # Compute the derivatives(gradients) for w and b
-        dW, db = compute_gradients(X, y, W, b.T, activation)
+        dW, db = compute_gradients(X, y, W, b, activation)
         
         # Update the weights and bias
         W -= learning_rate * dW

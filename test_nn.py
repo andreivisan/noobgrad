@@ -7,3 +7,7 @@ if __name__ == "__main__":
     X, y = load_data()
     
     print ('The first element of X is: ', X[0])
+
+    n_batches, n_features = X.shape
+
+    print(f'batches: {n_batches} | features: {n_features}')
