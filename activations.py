@@ -2,7 +2,7 @@ import numpy as np
 
 
 def f_x(X, W, b):
-    return np.dot(X, W.T) + b
+    return np.dot(X, W) + b
 
 
 def compute_gradients(X, y, w, b, activation):
@@ -78,6 +78,7 @@ ReLU
 As for ReLU we should use backpropagation and a suitable loss function
 we will use the MSE loss function and custom gradients and weights and bias update
 '''
+# TODO Here it should me max between 0 and X
 def relu(X, W, b):
     return np.maximum(0, f_x(X, W, b))
 
